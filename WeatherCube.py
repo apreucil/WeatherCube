@@ -38,26 +38,9 @@ pi = pigpio.pi()
 myloc = geocoder.ip('me')
 print(myloc.latlng)
 
-stations = pd.read_excel(r'/home/admin/Desktop/NWS_Stations.xlsx',index_col='STID')
+stations = pd.read_excel(r'NWS_Stations.xlsx',index_col='STID')
 stations['DistanceToMe'] = [gd.distance((myloc.latlng[0],myloc.latlng[1]),(lat,lon)).km for (lat, lon) in zip(stations.Latitude, stations.Longitude)]
 stations.sort_values(by='DistanceToMe',inplace=True)
-'''
-#%% Test Location
-fig = plt.subplot(projection=cartopy.crs.PlateCarree())
-
-plt.scatter(stations.Longitude,stations.Latitude,color='b',s=10)
-plt.scatter(myloc.latlng[1],myloc.latlng[0],color='r')
-for s in range(0,5):
-    plt.plot([myloc.latlng[1],stations.iloc[s].Longitude],[myloc.latlng[0],stations.iloc[s].Latitude],label='station: '+stations.index[s])
-plt.gca().add_feature(cartopy.feature.COASTLINE)
-plt.gca().add_feature(cartopy.feature.STATES)
-# plt.xlim(-140,-40)
-# plt.ylim(20,80)
-plt.legend()
-plt.xlim(-76,-74)
-plt.ylim(39.5,40.5)
-plt.show()
-'''
 #%% Generate Color List
 
 temp_rgbs = [(90,0,140),
@@ -74,25 +57,24 @@ temp_rgbs = [(90,0,140),
              (255,15,0),
              (255,0,0)]
 # FIX THIS!!!
-temp_hexes = [rgb2hex(t[0],t[1],t[2]) for t in temp_rgbs]
-cm = ListedColormap(temp_hexes, 'wcube', N=13)
-
+# temp_hexes = [rgb2hex(t[0],t[1],t[2]) for t in temp_rgbs]
+        
+cm = ListedColormap([tuple([t/255 for t in c]) for c in temp_rgbs], 'wcube', N=13)
 #%% Temperature Pattern DataFrame Set up
-pattern = pd.DataFrame(index = np.arange(-20,110))
+pattern = pd.DataFrame(index = np.arange(-15,115,10))
 
-temp_pattern = [[x]*10 for x in temp_hexes]
-temp_pattern_flat = [t for temp in temp_pattern for t in temp]
+pattern['temp_color'] = temp_rgbs
+pattern[['r','g','b']] = pattern['temp_color'].tolist()
 
-pattern['temp_color'] = temp_pattern_flat
+pattern_df = pd.DataFrame(index=np.arange(-50,150))
+pattern_df = pattern_df.join(pattern).drop('temp_color',axis=1)
+pattern_df.iloc[0] = [90,0,140]
+pattern_df.iloc[-1] = [255,0,0]
+pattern_df.interpolate(inplace=True)
+pattern_df = pattern_df.round(0).astype(int)
 
-pattern_extend = pd.DataFrame(index=[-50,150],
-                              data={'temp_color':['#502F7D','#520F0B']})
-
-pattern_fill = pd.DataFrame(index=[x for x in range(121,150)],columns=['temp_color'])
-pattern_fillLow = pd.DataFrame(index=[x for x in range(-50,-20)],columns=['temp_color'])
-
-temp_color_key = pattern.append(pattern_extend).append(pattern_fill).append(pattern_fillLow).sort_index()
-temp_color_key.fillna(method='bfill',inplace=True)
+temp_color_key = pd.DataFrame(index=pattern_df.index)
+temp_color_key['temp_color'] = list(zip(pattern_df.r,pattern_df.g,pattern_df.b))
 
 
 #%% Get current temperature
@@ -115,12 +97,14 @@ while True:
     # Test Display Color
     '''
     plt.figure(figsize=(5,5))
-    plt.scatter(1,1,color=current_temp_color,s=5000)
+    plt.scatter(1,1,color=rgb2hex(current_temp_color[0],
+                                  current_temp_color[1],
+                                  current_temp_color[2]),s=5000)
     plt.text(1,1,current_temp_F)
     plt.show()
     '''
     
-    r,g,b = hex2rgb(current_temp_color)
+    r,g,b = (current_temp_color)
     
 #     print (r,g,b)
     #set red RGB:
