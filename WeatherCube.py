@@ -5,7 +5,7 @@ Created on Sun Apr 10 14:37:43 2022
 
 @author: anthonypreucil
 """
-# Weather Cube/Tube Program
+# Weather Cube Program
 
 # About
 
@@ -38,7 +38,7 @@ pi = pigpio.pi()
 #%% Get curernt Location of Device and Locations of Stations
 
 myloc = geocoder.ip('me')
-print(myloc.latlng)
+# print(myloc.latlng)
 
 stations = pd.read_excel(r'NWS_Stations.xlsx',index_col='STID')
 stations['DistanceToMe'] = [gd.distance((myloc.latlng[0],myloc.latlng[1]),(lat,lon)).km for (lat, lon) in zip(stations.Latitude, stations.Longitude)]
@@ -58,9 +58,7 @@ temp_rgbs = [(90,0,140),
              (255,30,0),
              (255,15,0),
              (255,0,0)]
-# FIX THIS!!!
-# temp_hexes = [rgb2hex(t[0],t[1],t[2]) for t in temp_rgbs]
-        
+    
 cm = ListedColormap([tuple([t/255 for t in c]) for c in temp_rgbs], 'wcube', N=13)
 #%% Temperature Pattern DataFrame Set up
 pattern = pd.DataFrame(index = np.arange(-15,115,10))
@@ -78,26 +76,33 @@ pattern_df = pattern_df.round(0).astype(int)
 temp_color_key = pd.DataFrame(index=pattern_df.index)
 temp_color_key['temp_color'] = list(zip(pattern_df.r,pattern_df.g,pattern_df.b))
 
-
 #%% Get current temperature
 t_re = r'Temperature:<\/span><\/td><td>\s*(-?\d*\.\d*)'
 
 s = sched.scheduler(time.time, time.sleep)
-def set_color(sc): 
-    # do your stuff
-    location = stations.head(1).index[0]
-    r = requests.get(r'https://www.aviationweather.gov/metar/data?ids='+location+'&format=decoded&hours=0&taf=off&layout=on')
-    html = r.text
-    
-    # Note - try this: https://www.weather.gov/wrh/timeseries?site=KVAY
-    
-    current_temp_F = round(float(re.findall(t_re,html)[0])*9/5+32,0)
+
+def set_color(sc):
+    # print ('setting color')
+    data = False
+    i=1
+    while data == False:
+        try:
+            location = stations.head(i).index[i-1]
+            #Note - try this: https://www.weather.gov/wrh/timeseries?site=KVAY
+            r = requests.get(r'https://www.aviationweather.gov/metar/data?ids='+location+'&format=decoded&hours=0&taf=off&layout=on')
+            html = r.text
+            current_temp_F = round(float(re.findall(t_re,html)[0])*9/5+32,0)
+            data = True
+        except:
+            i+=1
+            
     #print ('Current Temperature at '+location+': '+str(current_temp_F))
     
     ### Generate current temperature color 
     current_temp_color = temp_color_key.temp_color[temp_color_key.index == int(current_temp_F)].values[0]
     # Test Display Color
     '''
+    # For MacBook Testing
     plt.figure(figsize=(5,5))
     plt.scatter(1,1,color=rgb2hex(current_temp_color[0],
                                   current_temp_color[1],
@@ -105,10 +110,7 @@ def set_color(sc):
     plt.text(1,1,current_temp_F)
     plt.show()
     '''
-    
     r,g,b = (current_temp_color)
-    
-#     print (r,g,b)
     #set red RGB:
     pi.set_PWM_dutycycle(17,r)
     #set green RGB:
@@ -116,8 +118,9 @@ def set_color(sc):
     #set blue RGB:
     pi.set_PWM_dutycycle(24,b)
     
+    # Wait 5 minutes before updating the code.
     sc.enter(300, 1, set_color, (sc,))
-
+    
 def check_alert(sc): 
     alert = wwa.get_alerts(myloc.lat,myloc.lng)
     if alert == 1:
@@ -125,9 +128,10 @@ def check_alert(sc):
         print ('Tornado Warning!')
     else:
         pass
+    # Wait 10 seconds before updating the code
     sc.enter(10, 1, check_alert, (sc,))
 
-#%% Run the schedule
+#%% Run the schedules
 
 # Run the set color program first, then check for update every 5 minutes.
 s.enter(1, 1, set_color, (s,))
@@ -138,67 +142,5 @@ s.enter(1, 1, check_alert, (s,))
 # Check for GitHub update every 30 minutes.
 # Add code here...
 
-
-"""
-# from time import time, sleep
-while True:
-    # sleep(300 - time() % 300) # Runs the code every 5 minutes when
-    # time is divisble by 5 (e.g. 9:00, 9:05, 9:10, etc.)
-    #print ('Running...')
-    location = stations.head(1).index[0]
-    r = requests.get(r'https://www.aviationweather.gov/metar/data?ids='+location+'&format=decoded&hours=0&taf=off&layout=on')
-    html = r.text
-    
-    # Note - try this: https://www.weather.gov/wrh/timeseries?site=KVAY
-    
-    current_temp_F = round(float(re.findall(t_re,html)[0])*9/5+32,0)
-    #print ('Current Temperature at '+location+': '+str(current_temp_F))
-    
-    ### Generate current temperature color 
-    current_temp_color = temp_color_key.temp_color[temp_color_key.index == int(current_temp_F)].values[0]
-    # Test Display Color
-    '''
-    plt.figure(figsize=(5,5))
-    plt.scatter(1,1,color=rgb2hex(current_temp_color[0],
-                                  current_temp_color[1],
-                                  current_temp_color[2]),s=5000)
-    plt.text(1,1,current_temp_F)
-    plt.show()
-    '''
-    
-    r,g,b = (current_temp_color)
-    
-#     print (r,g,b)
-    #set red RGB:
-    pi.set_PWM_dutycycle(17,r)
-    #set green RGB:
-    pi.set_PWM_dutycycle(22,g)
-    #set blue RGB:
-    pi.set_PWM_dutycycle(24,b)
-    '''
-    cont = input('Do you wish to continue? [y/n]: ')
-    if cont =='n':
-        turn_off()
-        break 
-    else:
-        pass
-    '''
-"""    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Finally, run the schedules
+s.run()
