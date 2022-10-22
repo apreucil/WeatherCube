@@ -5,7 +5,7 @@ Created on Sun Apr 10 14:37:43 2022
 
 @author: anthonypreucil
 """
-# Weather Cube Program
+# Weather Cube/Tube Program
 
 # About
 
@@ -24,6 +24,8 @@ import requests
 from colormap import hex2rgb, rgb2hex
 import pigpio
 import os
+import wwa
+import sched, time
 
 def turn_off():
     pi.set_PWM_dutycycle(17,0)
@@ -80,14 +82,74 @@ temp_color_key['temp_color'] = list(zip(pattern_df.r,pattern_df.g,pattern_df.b))
 #%% Get current temperature
 t_re = r'Temperature:<\/span><\/td><td>\s*(-?\d*\.\d*)'
 
-from time import time, sleep
+s = sched.scheduler(time.time, time.sleep)
+def set_color(sc): 
+    # do your stuff
+    location = stations.head(1).index[0]
+    r = requests.get(r'https://www.aviationweather.gov/metar/data?ids='+location+'&format=decoded&hours=0&taf=off&layout=on')
+    html = r.text
+    
+    # Note - try this: https://www.weather.gov/wrh/timeseries?site=KVAY
+    
+    current_temp_F = round(float(re.findall(t_re,html)[0])*9/5+32,0)
+    #print ('Current Temperature at '+location+': '+str(current_temp_F))
+    
+    ### Generate current temperature color 
+    current_temp_color = temp_color_key.temp_color[temp_color_key.index == int(current_temp_F)].values[0]
+    # Test Display Color
+    '''
+    plt.figure(figsize=(5,5))
+    plt.scatter(1,1,color=rgb2hex(current_temp_color[0],
+                                  current_temp_color[1],
+                                  current_temp_color[2]),s=5000)
+    plt.text(1,1,current_temp_F)
+    plt.show()
+    '''
+    
+    r,g,b = (current_temp_color)
+    
+#     print (r,g,b)
+    #set red RGB:
+    pi.set_PWM_dutycycle(17,r)
+    #set green RGB:
+    pi.set_PWM_dutycycle(22,g)
+    #set blue RGB:
+    pi.set_PWM_dutycycle(24,b)
+    
+    sc.enter(300, 1, set_color, (sc,))
+
+def check_alert(sc): 
+    alert = wwa.get_alerts(myloc.lat,myloc.lng)
+    if alert == 1:
+        # Flash Red/White
+        print ('Tornado Warning!')
+    else:
+        pass
+    sc.enter(10, 1, check_alert, (sc,))
+
+#%% Run the schedule
+
+# Run the set color program first, then check for update every 5 minutes.
+s.enter(1, 1, set_color, (s,))
+
+# Check for alert, then check every 10 seconds
+s.enter(1, 1, check_alert, (s,))
+
+# Check for GitHub update every 30 minutes.
+# Add code here...
+
+
+"""
+# from time import time, sleep
 while True:
-    sleep(300 - time() % 300) # Runs the code every 5 minutes when
+    # sleep(300 - time() % 300) # Runs the code every 5 minutes when
     # time is divisble by 5 (e.g. 9:00, 9:05, 9:10, etc.)
     #print ('Running...')
     location = stations.head(1).index[0]
     r = requests.get(r'https://www.aviationweather.gov/metar/data?ids='+location+'&format=decoded&hours=0&taf=off&layout=on')
     html = r.text
+    
+    # Note - try this: https://www.weather.gov/wrh/timeseries?site=KVAY
     
     current_temp_F = round(float(re.findall(t_re,html)[0])*9/5+32,0)
     #print ('Current Temperature at '+location+': '+str(current_temp_F))
@@ -121,7 +183,7 @@ while True:
     else:
         pass
     '''
-    
+"""    
     
 
 
