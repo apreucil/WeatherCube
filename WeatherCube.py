@@ -8,6 +8,7 @@ Created on Sun Apr 10 14:37:43 2022
 # Weather Cube Program
 
 # About
+# Note: GitHub update will take place outside of this program.
 
 
 #%% Import Libraries
@@ -32,7 +33,10 @@ def turn_off():
     pi.set_PWM_dutycycle(22,0)
     pi.set_PWM_dutycycle(24,0)
 
+#%%
 # FIX THIS
+# Idea - write a bash script to do this instead, then call the bash.
+# Or - make the bash scipt part of the startup script
 # os.system('sudo pigpiod')
 pi = pigpio.pi()
 #%% Get curernt Location of Device and Locations of Stations
@@ -138,9 +142,6 @@ s.enter(1, 1, set_color, (s,))
 
 # Check for alert, then check every 10 seconds
 s.enter(1, 1, check_alert, (s,))
-
-# Check for GitHub update every 30 minutes.
-# Add code here...
 
 # Finally, run the schedules
 s.run()
