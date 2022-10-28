@@ -43,7 +43,7 @@ pi = pigpio.pi()
 myloc = geocoder.ip('me')
 # print(myloc.latlng)
 
-stations = pd.read_excel(r'NWS_Stations.xlsx',index_col='STID')
+stations = pd.read_excel(r'/home/admin/WeatherCube/NWS_Stations.xlsx',index_col='STID')
 stations['DistanceToMe'] = [gd.distance((myloc.latlng[0],myloc.latlng[1]),(lat,lon)).km for (lat, lon) in zip(stations.Latitude, stations.Longitude)]
 stations.sort_values(by='DistanceToMe',inplace=True)
 #%% Generate Color List
