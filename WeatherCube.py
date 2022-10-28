@@ -33,7 +33,6 @@ def turn_off():
     pi.set_PWM_dutycycle(22,0)
     pi.set_PWM_dutycycle(24,0)
 
-#%%
 # FIX THIS
 # Idea - write a bash script to do this instead, then call the bash.
 # Or - make the bash scipt part of the startup script
@@ -126,7 +125,12 @@ def set_color(sc):
     sc.enter(300, 1, set_color, (sc,))
     
 def check_alert(sc): 
-    alert = wwa.get_alerts(myloc.lat,myloc.lng)
+    try:
+        alert = wwa.get_alerts(myloc.lat,myloc.lng,test=False)
+    except Exception as e:
+        alert = None
+        print ('An error occured when trying to get the WWA status. The error was:\n')
+        print (e)
     if alert == 1:
         # Flash Red/White
         print ('Tornado Warning!')
