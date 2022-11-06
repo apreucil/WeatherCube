@@ -9,7 +9,7 @@ Created on Sun Apr 10 14:37:43 2022
 
 # About
 # Note: GitHub update will take place outside of this program.
-
+# This is only a test
 
 #%% Import Libraries
 import pandas as pd
@@ -33,7 +33,6 @@ def turn_off():
     pi.set_PWM_dutycycle(22,0)
     pi.set_PWM_dutycycle(24,0)
 
-#%%
 # FIX THIS
 # Idea - write a bash script to do this instead, then call the bash.
 # Or - make the bash scipt part of the startup script
@@ -44,7 +43,7 @@ pi = pigpio.pi()
 myloc = geocoder.ip('me')
 # print(myloc.latlng)
 
-stations = pd.read_excel(r'NWS_Stations.xlsx',index_col='STID')
+stations = pd.read_excel(r'/home/admin/WeatherCube/NWS_Stations.xlsx',index_col='STID')
 stations['DistanceToMe'] = [gd.distance((myloc.latlng[0],myloc.latlng[1]),(lat,lon)).km for (lat, lon) in zip(stations.Latitude, stations.Longitude)]
 stations.sort_values(by='DistanceToMe',inplace=True)
 #%% Generate Color List
@@ -126,7 +125,12 @@ def set_color(sc):
     sc.enter(300, 1, set_color, (sc,))
     
 def check_alert(sc): 
-    alert = wwa.get_alerts(myloc.lat,myloc.lng)
+    try:
+        alert = wwa.get_alerts(myloc.lat,myloc.lng,test=False)
+    except Exception as e:
+        alert = None
+        print ('An error occured when trying to get the WWA status. The error was:\n')
+        print (e)
     if alert == 1:
         # Flash Red/White
         print ('Tornado Warning!')
