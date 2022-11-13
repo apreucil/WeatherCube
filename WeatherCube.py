@@ -27,11 +27,10 @@ import pigpio
 import os
 import wwa
 import sched, time
-<<<<<<< Updated upstream
-=======
 import sys
 sys.path.append(['/home/admin/WeatherCube'])
->>>>>>> Stashed changes
+
+
 
 def turn_off():
     pi.set_PWM_dutycycle(17,0)
