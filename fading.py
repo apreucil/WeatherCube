@@ -15,38 +15,38 @@ import numpy as np
 
 # uncomment for pi
 pi = pigpio.pi()
-r,g,b = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
-
-# uncomment for mac
-# r,g,b = (200,56,90)
-
-speed = 20
-
-df = pd.DataFrame([r,g,b]).transpose()
-blank = pd.DataFrame(index=np.arange(speed))
-df = df.append(blank).reset_index(drop=True)
-df.at[speed,:] = [r/2,g/2,b/2] # dip to half brightness
-
-interp_df = df.interpolate()
-interp_df = interp_df.append(interp_df[::-1]).round().astype(int)
+rr,gg,bb = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
 # interp_df
 
-def fade():
+def fade(speed):
+    r,g,b = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
+
+    # uncomment for mac
+    # r,g,b = (200,56,90)
+    df = pd.DataFrame([r,g,b]).transpose()
+    blank = pd.DataFrame(index=np.arange(speed))
+    df = pd.concat([df,blank]).reset_index(drop=True)
+    df.at[speed,:] = [r/3,g/3,b/3] # dip to half brightness
+
+    interp_df = df.interpolate()
+    interp_df = pd.concat([interp_df,interp_df[::-1]]).round().astype(int).reset_index(drop=True)
     x = 0
+    
     fade=True
     while fade:
+        #print (x)
         pi.set_PWM_dutycycle(17,interp_df[0][x])
         pi.set_PWM_dutycycle(22,interp_df[1][x])
         pi.set_PWM_dutycycle(24,interp_df[2][x])
-        x+=1
-        if x >=len(interp_df):
-            x==0
+        if x < len(interp_df)-1:
+            x+=1
         else:
-            fade=False
+            fade=True
+            x=0
         # delay
         time.sleep(0.05)
         
-        
-        
-    
-    
+def reset():
+        pi.set_PWM_dutycycle(17,rr)
+        pi.set_PWM_dutycycle(22,gg)
+        pi.set_PWM_dutycycle(24,bb)
