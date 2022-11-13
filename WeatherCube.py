@@ -43,7 +43,7 @@ pi = pigpio.pi()
 myloc = geocoder.ip('me')
 # print(myloc.latlng)
 
-stations = pd.read_excel(r'/home/admin/WeatherCube/NWS_Stations.xlsx',index_col='STID')
+stations = pd.read_excel(r'NWS_Stations.xlsx',index_col='STID')
 stations['DistanceToMe'] = [gd.distance((myloc.latlng[0],myloc.latlng[1]),(lat,lon)).km for (lat, lon) in zip(stations.Latitude, stations.Longitude)]
 stations.sort_values(by='DistanceToMe',inplace=True)
 #%% Generate Color List
@@ -84,8 +84,7 @@ t_re = r'Temperature:<\/span><\/td><td>\s*(-?\d*\.\d*)'
 
 s = sched.scheduler(time.time, time.sleep)
 
-def set_color(sc):
-    # print ('setting color')
+def get_temp_color():
     data = False
     i=1
     while data == False:
@@ -102,7 +101,13 @@ def set_color(sc):
     #print ('Current Temperature at '+location+': '+str(current_temp_F))
     
     ### Generate current temperature color 
-    current_temp_color = temp_color_key.temp_color[temp_color_key.index == int(current_temp_F)].values[0]
+    return temp_color_key.temp_color[temp_color_key.index == int(current_temp_F)].values[0]
+
+
+def set_color(sc):
+    # print ('setting color')
+    
+    current_temp_color = get_temp_color
     # Test Display Color
     '''
     # For MacBook Testing
