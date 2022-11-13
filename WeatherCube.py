@@ -27,6 +27,8 @@ import pigpio
 import os
 import wwa
 import sched, time
+import sys
+sys.path.append('/home/admin/WeatherCube')
 
 def turn_off():
     pi.set_PWM_dutycycle(17,0)
