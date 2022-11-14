@@ -26,7 +26,7 @@ def fade(speed):
     df = pd.DataFrame([r,g,b]).transpose()
     blank = pd.DataFrame(index=np.arange(speed))
     df = pd.concat([df,blank]).reset_index(drop=True)
-    df.at[speed,:] = [r/3,g/3,b/3] # dip to half brightness
+    df.at[speed,:] = [r/4,g/4,b/4] # dip to quarter brightness
 
     interp_df = df.interpolate()
     interp_df = pd.concat([interp_df,interp_df[::-1]]).round().astype(int).reset_index(drop=True)
