@@ -149,9 +149,11 @@ def run_fade(sc):
     else:
         pass
 
-    while alert != 0:
+    while alert != None:
         if alert==5:
             fading.fade(40)
+        else:
+            pass
     # Check every 4 seconds for an update to alert
     sc.enter(4, 1, run_fade, (sc,))
 
