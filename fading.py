@@ -15,10 +15,16 @@ import numpy as np
 
 # uncomment for pi
 pi = pigpio.pi()
-rr,gg,bb = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
 # interp_df
 
 def fade(speed):
+    # Save original values
+    global rr
+    global gg
+    global bb
+    rr,gg,bb = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
+    
+    # set values for fading
     r,g,b = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
 
     # uncomment for mac
@@ -41,8 +47,7 @@ def fade(speed):
         if x < len(interp_df)-1:
             x+=1
         else:
-            fade=True
-            x=0
+            fade=False
         # delay
         time.sleep(0.05)
         

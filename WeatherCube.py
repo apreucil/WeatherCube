@@ -27,6 +27,7 @@ import pigpio
 import os
 import wwa
 import sched, time
+import fading
 
 def turn_off():
     pi.set_PWM_dutycycle(17,0)
@@ -129,18 +130,15 @@ def set_color(sc):
     # Wait 5 minutes before updating the code.
     sc.enter(300, 1, set_color, (sc,))
     
-def check_alert(sc): 
+def check_alert(sc):
+    global alert
     try:
         alert = wwa.get_alerts(myloc.lat,myloc.lng,test=False)
     except Exception as e:
         alert = None
         print ('An error occured when trying to get the WWA status. The error was:\n')
         print (e)
-    if alert == 1:
-        # Flash Red/White
-        print ('Tornado Warning!')
-    else:
-        pass
+        return alert
     # Wait 10 seconds before updating the code
     sc.enter(10, 1, check_alert, (sc,))
 
@@ -154,3 +152,13 @@ s.enter(1, 1, check_alert, (s,))
 
 # Finally, run the schedules
 s.run()
+# 
+if alert == 1:
+    # Flash Red/White
+    print ('Tornado Warning!')
+else:
+    pass
+
+while alert != 0:
+    if alert==5:
+        fading.fade(40)
