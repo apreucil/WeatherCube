@@ -141,6 +141,19 @@ def check_alert(sc):
         return alert
     # Wait 10 seconds before updating the code
     sc.enter(10, 1, check_alert, (sc,))
+    
+def run_fade(sc):
+    if alert == 1:
+        # Flash Red/White
+        print ('Tornado Warning!')
+    else:
+        pass
+
+    while alert != 0:
+        if alert==5:
+            fading.fade(40)
+    # Check every 4 seconds for an update to alert
+    sc.enter(4, 1, run_fade, (sc,))
 
 #%% Run the schedules
 
@@ -150,15 +163,9 @@ s.enter(1, 1, set_color, (s,))
 # Check for alert, then check every 10 seconds
 s.enter(1, 1, check_alert, (s,))
 
+# Use value of alert to trigger fading, if neccesary
+s.enter(1, 1, run_fade, (s,))
+
 # Finally, run the schedules
 s.run()
-# 
-if alert == 1:
-    # Flash Red/White
-    print ('Tornado Warning!')
-else:
-    pass
-
-while alert != 0:
-    if alert==5:
-        fading.fade(40)
+# Nothing can happen after this line
