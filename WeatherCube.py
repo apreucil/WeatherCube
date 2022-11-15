@@ -140,7 +140,7 @@ def run_fade(sc):
     else:
         pass
 
-    while alert != None:
+    if alert != None:
         r,g,b = (current_temp_color)
         #set red RGB:
         pi.set_PWM_dutycycle(17,r)
