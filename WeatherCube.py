@@ -150,6 +150,15 @@ def run_fade(sc):
         pass
 
     while alert != None:
+        current_temp_color = get_temp_color()
+        r,g,b = (current_temp_color)
+        #set red RGB:
+        pi.set_PWM_dutycycle(17,r)
+        #set green RGB:
+        pi.set_PWM_dutycycle(22,g)
+        #set blue RGB:
+        pi.set_PWM_dutycycle(24,b)
+        
         if alert==5:
             fading.fade(40)
         else:
