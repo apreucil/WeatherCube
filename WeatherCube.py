@@ -107,7 +107,7 @@ def get_temp_color():
 
 def set_color(sc):
     # print ('setting color')
-    
+    global current_temp_color
     current_temp_color = get_temp_color()
     # Test Display Color
     '''
@@ -150,7 +150,6 @@ def run_fade(sc):
         pass
 
     while alert != None:
-        current_temp_color = get_temp_color()
         r,g,b = (current_temp_color)
         #set red RGB:
         pi.set_PWM_dutycycle(17,r)
