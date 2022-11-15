@@ -109,16 +109,7 @@ def set_color(sc):
     # print ('setting color')
     global current_temp_color
     current_temp_color = get_temp_color()
-    # Test Display Color
-    '''
-    # For MacBook Testing
-    plt.figure(figsize=(5,5))
-    plt.scatter(1,1,color=rgb2hex(current_temp_color[0],
-                                  current_temp_color[1],
-                                  current_temp_color[2]),s=5000)
-    plt.text(1,1,current_temp_F)
-    plt.show()
-    '''
+
     r,g,b = (current_temp_color)
     #set red RGB:
     pi.set_PWM_dutycycle(17,r)
