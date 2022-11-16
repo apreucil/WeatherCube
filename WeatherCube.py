@@ -130,7 +130,7 @@ def check_alert(sc):
         print ('An error occured when trying to get the WWA status. The error was:\n')
         print (e)
         return alert
-    alert = 2
+    alert = 3
     # Wait 10 seconds before updating the code
     sc.enter(10, 1, check_alert, (sc,))
     
