@@ -63,7 +63,7 @@ def fade(speed, alert_num=5):
         # delay
         time.sleep(0.05)
         
-def reset():
+def reset(rr,gg,bb):
         pi.set_PWM_dutycycle(17,rr)
         pi.set_PWM_dutycycle(22,gg)
         pi.set_PWM_dutycycle(24,bb)
@@ -90,13 +90,13 @@ def flash(alert_num):
     elif alert_num == 2:
         # Severe Thunderstorm Warning Flash Yellow
         rr,gg,bb = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
-        reset()
+        reset(rr,gg,bb)
         time.sleep(1)
         pi.set_PWM_dutycycle(17,255)
         pi.set_PWM_dutycycle(22,180)
         pi.set_PWM_dutycycle(24,0)
         time.sleep(1)
-        reset()
+        reset(rr,gg,bb)
         time.sleep(1)
         pi.set_PWM_dutycycle(17,255)
         pi.set_PWM_dutycycle(22,180)
