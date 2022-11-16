@@ -99,7 +99,7 @@ def get_temp_color():
         except:
             i+=1
             
-    #print ('Current Temperature at '+location+': '+str(current_temp_F))
+    # print ('Current Temperature at '+location+': '+str(current_temp_F))
     
     ### Generate current temperature color 
     return temp_color_key.temp_color[temp_color_key.index == int(current_temp_F)].values[0]
@@ -130,17 +130,15 @@ def check_alert(sc):
         print ('An error occured when trying to get the WWA status. The error was:\n')
         print (e)
         return alert
+    alert = 1
     # Wait 10 seconds before updating the code
     sc.enter(10, 1, check_alert, (sc,))
     
 def run_fade(sc):
-    if alert == 1:
-        # Flash Red/White
-        print ('Tornado Warning!')
-    else:
-        pass
-
-    if alert != None:
+    if alert == 1 or 2:
+        print ('Hello')
+        fading.flash(alert)
+    elif alert >= 3:
         r,g,b = (current_temp_color)
         #set red RGB:
         pi.set_PWM_dutycycle(17,r)
@@ -149,10 +147,9 @@ def run_fade(sc):
         #set blue RGB:
         pi.set_PWM_dutycycle(24,b)
         
-        if alert==5:
-            fading.fade(40)
-        else:
-            pass
+        fading.fade(40,alert)
+    else:
+        pass
     # Check every 4 seconds for an update to alert
     sc.enter(4, 1, run_fade, (sc,))
 
@@ -165,6 +162,7 @@ s.enter(1, 1, set_color, (s,))
 s.enter(1, 1, check_alert, (s,))
 
 # Use value of alert to trigger fading, if neccesary
+
 s.enter(1, 1, run_fade, (s,))
 
 # Finally, run the schedules
