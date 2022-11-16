@@ -25,7 +25,7 @@ def fade(speed, alert_num=5):
     rr,gg,bb = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
 
     # uncomment for mac
-    r,g,b = (200,56,90)
+    # r,g,b = (200,56,90)
     if alert_num==3:
         # Blizzard Warning Slow fade red to purple
         r,g,b = (255,0,0)

@@ -136,7 +136,7 @@ def check_alert(sc):
     
 def run_fade(sc):
     if alert == 1 or 2:
-        print ('Hello')
+        # print ('Hello')
         fading.flash(alert)
     elif alert >= 3:
         r,g,b = (current_temp_color)
