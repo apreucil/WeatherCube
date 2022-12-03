@@ -42,13 +42,13 @@ pi = pigpio.pi()
 
 #%% wait for wifi connectivity before running
 # Assume connection problems
-not_connected = True
-while not_connected:
-    network = os.system('iwgetid')
-    if network != None:
-        not_connected == False
-    else:
-        pass
+# not_connected = True
+# while not_connected:
+#     network = os.system('iwgetid')
+#     if network != None:
+#         not_connected == False
+#     else:
+#         pass
 
 #%% Get curernt Location of Device and Locations of Stations
 
