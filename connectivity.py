@@ -31,6 +31,6 @@ def get_wifi_networks():
     return networks
 
 # Example usage
-print ('Connected To Internet: '+is_connected())
+print ('Connected To Internet: '+str(is_connected()))
 networks = get_wifi_networks()
 print(networks)
