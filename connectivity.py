@@ -29,19 +29,3 @@ def get_wifi_networks():
     except Exception as e:
         print(e)
     return networks
-
-# Example usage
-print ('Connected To Internet: '+str(is_connected()))
-networks = get_wifi_networks()
-print(networks)
-
-  
-# using the check_output() for having the network term retrieval
-devices = subprocess.check_output(['netsh','wlan','show','network'])
-  
-# decode it to strings
-devices = devices.decode('ascii')
-devices= devices.replace("\r","")
-  
-# displaying the information
-print(devices)
