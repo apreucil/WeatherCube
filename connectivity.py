@@ -7,6 +7,7 @@ Created on Sat Dec 31 13:43:39 2022
 """
 import socket
 import subprocess
+import re
 
 def is_connected():
     try:
@@ -29,3 +30,17 @@ def get_wifi_networks():
     except Exception as e:
         print(e)
     return networks
+
+def get_known_networks():
+    fid = open("/etc/wpa_supplicant/wpa_supplicant.conf")
+    content = fid.read()
+    known_networks = re.findall('/tssid="(.*)"',content)
+    
+    
+
+
+res_hot_spot = False
+if not is_connected() and res_hot_spot == False:
+    print ('What wifi is avail?')
+    wifi_list = get_wifi_networks()
+    known_networks = get_known_networks()
