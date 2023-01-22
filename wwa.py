@@ -12,7 +12,7 @@ import requests
 import pandas as pd
 import geocoder
 
-def get_alerts(lat,lon,test=False):
+def get_alerts(test=False):
     myloc = geocoder.ip('me')
     lat,lon = myloc.latlng[0],myloc.latlng[1]
     
