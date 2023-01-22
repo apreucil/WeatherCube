@@ -135,14 +135,33 @@ def set_color(sc):
     sc.enter(300, 1, set_color, (sc,))
     
 def check_alert():
-    global alert
-    try:
-        alert = wwa.get_alerts(test=False)
-    except Exception as e:
-        alert = None
-        print ('An error occured when trying to get the WWA status. The error was:\n')
-        print (e)
-    return alert
+    
+    while True:
+        try:
+            alert = wwa.get_alerts(test=False)
+        except Exception as e:
+            alert = None
+            print ('An error occured when trying to get the WWA status. The error was:\n')
+            print (e)
+        r,g,b = get_temp_color()
+        if alert==1:
+            fading.flash(1)
+        elif alert==2:
+            fading.flash(2)
+        elif alert==3:
+            fading.fade(3)
+        elif alert==4:
+            fading.reset(r,g,b)
+            fading.fade(4)
+        elif alert==5:
+            fading.reset(r,g,b)
+            fading.fade(5)
+        elif alert==None:
+            fading.reset(r,g,b)
+        else:
+            pass
+
+        
 
 ''' 
 def run_fade(sc):

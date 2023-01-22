@@ -90,8 +90,6 @@ def flash(alert_num):
     elif alert_num == 2:
         # Severe Thunderstorm Warning Flash Yellow
         rr,gg,bb = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
-        reset(rr,gg,bb)
-        time.sleep(1)
         pi.set_PWM_dutycycle(17,255)
         pi.set_PWM_dutycycle(22,180)
         pi.set_PWM_dutycycle(24,0)
@@ -101,6 +99,8 @@ def flash(alert_num):
         pi.set_PWM_dutycycle(17,255)
         pi.set_PWM_dutycycle(22,180)
         pi.set_PWM_dutycycle(24,0)
+        time.sleep(1)
+        reset(rr,gg,bb)
         time.sleep(1)
     else:
         pass
