@@ -139,7 +139,7 @@ def check_alert():
     while True:
         try:
             alert = wwa.get_alerts(test=False)
-            alert = 1
+            alert = 2
         except Exception as e:
             alert = None
             print ('An error occured when trying to get the WWA status. The error was:\n')
@@ -148,6 +148,7 @@ def check_alert():
         if alert==1:
             fading.flash(1)
         elif alert==2:
+            fading.reset(r,g,b)
             fading.flash(2)
         elif alert==3:
             fading.fade(40,3)
