@@ -139,7 +139,7 @@ def check_alert():
     while True:
         try:
             alert = wwa.get_alerts(test=False)
-            alert = 4
+            alert = 5
         except Exception as e:
             alert = None
             print ('An error occured when trying to get the WWA status. The error was:\n')
