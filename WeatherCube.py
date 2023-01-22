@@ -135,11 +135,9 @@ def set_color(sc):
     sc.enter(300, 1, set_color, (sc,))
     
 def check_alert():
-    alert = 1
     while True:
         try:
-            # alert = wwa.get_alerts(test=False)
-            x = 1
+            alert = wwa.get_alerts(test=False)
         except Exception as e:
             alert = None
             print ('An error occured when trying to get the WWA status. The error was:\n')
@@ -148,7 +146,6 @@ def check_alert():
         
         if alert==1:
             fading.flash(1)
-            alert = None
         elif alert==2:
             fading.reset(r,g,b)
             fading.flash(2)
