@@ -79,5 +79,7 @@ def check_connected():
     # we have broken out of the while loop which means we are now connected to
     # the internet. We can now safely start the weather cube program.
     print ('Starting pullcheck for weather tube')
+    subprocess.Popen(["python3", '/home/admin/pullcheck_tube/pullcheck-master/main.py']).returncode
     
 check_connected()
+# Test Comment
