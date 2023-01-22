@@ -28,6 +28,7 @@ import os
 import wwa
 import sched, time
 import fading
+from connectivity import *
 
 def turn_off():
     pi.set_PWM_dutycycle(17,0)
@@ -40,11 +41,11 @@ def turn_off():
 # os.system('sudo pigpiod')
 pi = pigpio.pi()
 
-#%% wait for wifi connectivity before running
-# Assume connection problems
-# not_connected = True
-# while not_connected:
-#     network = os.system('iwgetid')
+# #%% wait for wifi connectivity before running
+# # Assume connection problems
+# connected = is_connected()
+# while not connected:
+#     list_of_wifi = get_wifi_networks()
 #     if network != None:
 #         not_connected == False
 #     else:
