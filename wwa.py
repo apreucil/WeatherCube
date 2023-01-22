@@ -10,12 +10,15 @@ Created on Sat Oct 22 14:21:21 2022
 import json
 import requests
 import pandas as pd
+import geocoder
 
-# myloc = geocoder.ip('me')
-# print(myloc.latlng)
 def get_alerts(lat,lon,test=False):
+    myloc = geocoder.ip('me')
+    lat,lon = myloc.latlng[0],myloc.latlng[1]
+    
     alert_json = json.loads(requests.get(r'https://api.weather.gov/alerts/active?point='+str(lat)+','+str(lon)).text)
     
+
     test_json = json.loads(requests.get(r'https://api.weather.gov/alerts/active?point=37.26,-104.33').text)
     if test == True:
         alert_json = test_json

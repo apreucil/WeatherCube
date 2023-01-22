@@ -129,23 +129,22 @@ def set_color(sc):
     pi.set_PWM_dutycycle(22,g)
     #set blue RGB:
     pi.set_PWM_dutycycle(24,b)
-    
+    alert = check_alert()
+    print (alert, ' : Is the current alert')
     # Wait 5 minutes before updating the code.
     sc.enter(300, 1, set_color, (sc,))
     
-def check_alert(sc):
+def check_alert():
     global alert
     try:
-        alert = wwa.get_alerts(myloc.lat,myloc.lng,test=False)
+        alert = wwa.get_alerts(test=False)
     except Exception as e:
         alert = None
         print ('An error occured when trying to get the WWA status. The error was:\n')
         print (e)
-        return alert
-    
-    # Wait 10 seconds before updating the code
-    sc.enter(10, 1, check_alert, (sc,))
-    
+    return alert
+
+''' 
 def run_fade(sc):
     alert = 3
     if alert == 1 or 2:
@@ -165,6 +164,7 @@ def run_fade(sc):
         pass
     # Check every 4 seconds for an update to alert
     sc.enter(4, 1, run_fade, (sc,))
+'''
 
 #%% Run the schedules
 
@@ -172,11 +172,11 @@ def run_fade(sc):
 s.enter(1, 1, set_color, (s,))
 
 # Check for alert, then check every 10 seconds
-s.enter(1, 1, check_alert, (s,))
+# s.enter(1, 1, check_alert, (s,))
 
 # Use value of alert to trigger fading, if neccesary
 
-s.enter(1, 1, run_fade, (s,))
+# s.enter(1, 1, run_fade, (s,))
 
 # Finally, run the schedules
 s.run()
