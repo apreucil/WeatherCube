@@ -57,6 +57,7 @@ pi = pigpio.pi()
 myloc = geocoder.ip('me')
 if myloc.latlng == None:
     # Back up by using zip code
+    # Test
     import pgeocode as pg
     nomi = pg.Nominatim('US')
     print(nomi.query_postal_code("08016"))
