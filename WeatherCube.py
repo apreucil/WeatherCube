@@ -57,7 +57,11 @@ try:
     myloc = geocoder.ip('me')
 except:
     # Back up by using zip code
-    import pgeocode
+    import pgeocode as pg
+    nomi = pg.Nominatim('US')
+    print(nomi.query_postal_code("08016"))
+    myloc = pd.DataFrame()
+    myloc['latlng'] = [nomi.query_postal_code("08016").latitude,nomi.query_postal_code("08016").longitude]
 # print(myloc.latlng)
 
 stations = pd.read_excel(r'/home/admin/WeatherCube/NWS_Stations.xlsx',index_col='STID')
