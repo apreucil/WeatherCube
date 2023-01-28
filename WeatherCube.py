@@ -53,9 +53,9 @@ pi = pigpio.pi()
 
 #%% Get curernt Location of Device and Locations of Stations
 
-try:
-    myloc = geocoder.ip('me')
-except:
+
+myloc = geocoder.ip('me')
+if myloc.latlng == None:
     # Back up by using zip code
     import pgeocode as pg
     nomi = pg.Nominatim('US')
