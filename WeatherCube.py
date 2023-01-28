@@ -117,7 +117,7 @@ def get_temp_color():
     return temp_color_key.temp_color[temp_color_key.index == int(current_temp_F)].values[0]
 
 
-def set_color(sc):
+def set_color(sc,myloc):
     # print ('setting color')
     global current_temp_color
     current_temp_color = get_temp_color()
@@ -129,15 +129,15 @@ def set_color(sc):
     pi.set_PWM_dutycycle(22,g)
     #set blue RGB:
     pi.set_PWM_dutycycle(24,b)
-    alert = check_alert()
+    alert = check_alert(myloc)
     print (alert, ' : Is the current alert')
     # Wait 5 minutes before updating the code.
-    sc.enter(300, 1, set_color, (sc,))
+    sc.enter(300, 1, set_color, (sc,myloc))
     
-def check_alert():
+def check_alert(myloc):
     while True:
         try:
-            alert = wwa.get_alerts(test=False)
+            alert = wwa.get_alerts(myloc,test=False)
         except Exception as e:
             alert = None
             print ('An error occured when trying to get the WWA status. The error was:\n')
@@ -189,7 +189,7 @@ def run_fade(sc):
 #%% Run the schedules
 
 # Run the set color program first, then check for update every 5 minutes.
-s.enter(1, 1, set_color, (s,))
+s.enter(1, 1, set_color, (s,myloc))
 
 # Check for alert, then check every 10 seconds
 # s.enter(1, 1, check_alert, (s,))
