@@ -53,7 +53,11 @@ pi = pigpio.pi()
 
 #%% Get curernt Location of Device and Locations of Stations
 
-myloc = geocoder.ip('me')
+try:
+    myloc = geocoder.ip('me')
+except:
+    # Back up by using zip code
+    import pgeocode
 # print(myloc.latlng)
 
 stations = pd.read_excel(r'/home/admin/WeatherCube/NWS_Stations.xlsx',index_col='STID')
