@@ -38,48 +38,48 @@ def get_known_networks():
     known_networks = [n[0] for n in nets if n!=[]]
     return known_networks
     
-def check_connected():
-    res_hot_spot = False
-    web_server = False
-    while not is_connected():
-        if res_hot_spot == False:
-            # Case to deal with the broken autohotspot
-            print ('What wifi is avail?')
-            wifi_list = get_wifi_networks()
-            known_networks = get_known_networks()
-            check = all(item in known_networks for item in wifi_list)
-            if check:
-                # This means we have a network saved that is available,
-                # but the pi is not connected. This is due to two possible
-                # issues.
-                # 1 - The autohotspot has failed to recognize the available
-                # netowork and has started to broadcast its own wifi
-                # 2 - The user has changed the wifi password
-                # Solution: Try to restart the autohotspot, then recheck
-                # the connectivity.
-                print ('restart the autohotspot')
-                os.chdir('/home/admin')
-                os.system('sudo systemctl restart autohotspot')
-                res_auto_hotspot=True
+# def check_connected():
+#     res_hot_spot = False
+#     web_server = False
+#     while not is_connected():
+#         if res_hot_spot == False:
+#             # Case to deal with the broken autohotspot
+#             print ('What wifi is avail?')
+#             wifi_list = get_wifi_networks()
+#             known_networks = get_known_networks()
+#             check = all(item in known_networks for item in wifi_list)
+#             if check:
+#                 # This means we have a network saved that is available,
+#                 # but the pi is not connected. This is due to two possible
+#                 # issues.
+#                 # 1 - The autohotspot has failed to recognize the available
+#                 # netowork and has started to broadcast its own wifi
+#                 # 2 - The user has changed the wifi password
+#                 # Solution: Try to restart the autohotspot, then recheck
+#                 # the connectivity.
+#                 print ('restart the autohotspot')
+#                 os.chdir('/home/admin')
+#                 os.system('sudo systemctl restart autohotspot')
+#                 res_auto_hotspot=True
                 
-            else:
-                # This is the case where there are no known networks
-                # which means the user has changed the SSID or the weather
-                # cube is out of range of the signal.
-                print ('user needs to set up wifi')
-                # Start the web server
+#             else:
+#                 # This is the case where there are no known networks
+#                 # which means the user has changed the SSID or the weather
+#                 # cube is out of range of the signal.
+#                 print ('user needs to set up wifi')
+#                 # Start the web server
                 
-        elif res_hot_spot == True:
-            # This is the case where the we have determined there is a known
-            # wifi network in range, but reseting the hotspot failed to connect
-            # most likely due to an incorrect user password.
-            print ('User wifi password is incorrect')
-            # start web server
+#         elif res_hot_spot == True:
+#             # This is the case where the we have determined there is a known
+#             # wifi network in range, but reseting the hotspot failed to connect
+#             # most likely due to an incorrect user password.
+#             print ('User wifi password is incorrect')
+#             # start web server
             
-    # we have broken out of the while loop which means we are now connected to
-    # the internet. We can now safely start the weather cube program.
-    print ('Starting pullcheck for weather tube')
-    subprocess.Popen(["python3", '/home/admin/pullcheck_tube/pullcheck-master/main.py']).returncode
+#     # we have broken out of the while loop which means we are now connected to
+#     # the internet. We can now safely start the weather cube program.
+#     print ('Starting pullcheck for weather tube')
+#     subprocess.Popen(["python3", '/home/admin/pullcheck_tube/pullcheck-master/main.py']).returncode
     
-check_connected()
+# check_connected()
 # Test Comment
