@@ -62,6 +62,7 @@ def fade(speed, alert_num=5):
                 x+=1
             else:
                 fade=False
+                x=0
             # delay
             time.sleep(0.05)
         
