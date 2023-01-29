@@ -53,16 +53,16 @@ pi = pigpio.pi()
 
 #%% Get curernt Location of Device and Locations of Stations
 
-
+zipcode = "70646"
 myloc = geocoder.ip('me')
 if myloc.latlng == None:
     # Back up by using zip code
     # Test
     import pgeocode as pg
     nomi = pg.Nominatim('US')
-    print(nomi.query_postal_code("08016"))
+    print(nomi.query_postal_code(zipcode))
     myloc = pd.DataFrame()
-    myloc['latlng'] = [nomi.query_postal_code("08016").latitude,nomi.query_postal_code("08016").longitude]
+    myloc['latlng'] = [nomi.query_postal_code(zipcode).latitude,nomi.query_postal_code(zipcode).longitude]
 # print(myloc.latlng)
 
 stations = pd.read_excel(r'/home/admin/WeatherCube/NWS_Stations.xlsx',index_col='STID')
