@@ -53,12 +53,12 @@ pi = pigpio.pi()
 
 #%% Get curernt Location of Device and Locations of Stations
 
-zipcode = "70646"
+zipcode = "79760"
 test_loc = True
 myloc = geocoder.ip('me')
 if myloc.latlng == None or test_loc==True:
     # Back up by using zip code
-    # Test
+    # Tests
     import pgeocode as pg
     nomi = pg.Nominatim('US')
     print(nomi.query_postal_code(zipcode))
