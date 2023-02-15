@@ -139,8 +139,8 @@ def set_color(sc,myloc):
     pi.set_PWM_dutycycle(22,g)
     #set blue RGB:
     pi.set_PWM_dutycycle(24,b)
-    alert = check_alert(myloc)
-    print (alert, ' : Is the current alert')
+    #alert = check_alert(myloc)
+    #print (alert, ' : Is the current alert')
     # Wait 5 minutes before updating the code.
     sc.enter(300, 1, set_color, (sc,myloc))
     
@@ -169,10 +169,10 @@ def check_alert(myloc):
             fading.fade(40,5)
         elif alert==None:
             fading.reset(r,g,b)
+            break
         else:
             pass
 
-        
 
 ''' 
 def run_fade(sc):
