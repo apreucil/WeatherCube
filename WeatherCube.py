@@ -9,7 +9,6 @@ Created on Sun Apr 10 14:37:43 2022
 
 # About
 # Note: GitHub update will take place outside of this program.
-# This is only a test
 
 #%% Import Libraries
 import pandas as pd
@@ -53,7 +52,7 @@ pi = pigpio.pi()
 
 #%% Get curernt Location of Device and Locations of Stations
 
-zipcode = "79760"
+zipcode = "08016"
 test_loc = True
 myloc = geocoder.ip('me')
 if myloc.latlng == None or test_loc==True:
@@ -139,6 +138,7 @@ def set_color(sc,myloc):
     pi.set_PWM_dutycycle(22,g)
     #set blue RGB:
     pi.set_PWM_dutycycle(24,b)
+
     # Wait 5 minutes before updating the color.
     sc.enter(300, 1, set_color, (sc,myloc))
     
