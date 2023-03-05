@@ -139,74 +139,53 @@ def set_color(sc,myloc):
     pi.set_PWM_dutycycle(22,g)
     #set blue RGB:
     pi.set_PWM_dutycycle(24,b)
-    alert = check_alert(myloc)
-    print (alert, ' : Is the current alert')
-    # Wait 5 minutes before updating the code.
+    # Wait 5 minutes before updating the color.
     sc.enter(300, 1, set_color, (sc,myloc))
     
-def check_alert(myloc):
-    while True:
-        try:
-            alert = wwa.get_alerts(myloc,test=False)
-        except Exception as e:
-            alert = None
-            print ('An error occured when trying to get the WWA status. The error was:\n')
-            print (e)
-        r,g,b = get_temp_color()
-        
-        if alert==1:
-            fading.flash(1)
-        elif alert==2:
-            fading.reset(r,g,b)
-            fading.flash(2)
-        elif alert==3:
-            fading.fade(40,3)
-        elif alert==4:
-            fading.reset(r,g,b)
-            fading.fade(40,4)
-        elif alert==5:
-            fading.reset(r,g,b)
-            fading.fade(40,5)
-        elif alert==None:
-            fading.reset(r,g,b)
-        else:
-            pass
-
-        
-
-''' 
-def run_fade(sc):
-    alert = 3
-    if alert == 1 or 2:
-        # print ('Hello')
-        fading.flash(alert)
-    elif alert >= 3:
-        r,g,b = (current_temp_color)
-        #set red RGB:
-        pi.set_PWM_dutycycle(17,r)
-        #set green RGB:
-        pi.set_PWM_dutycycle(22,g)
-        #set blue RGB:
-        pi.set_PWM_dutycycle(24,b)
-        
-        fading.fade(40,alert)
+def check_alert(sc,myloc):
+    global alert
+    try:
+        alert = wwa.get_alerts(myloc,test=False)
+    except Exception as e:
+        alert = None
+        print ('An error occured when trying to get the WWA status. The error was:\n')
+        print (e)
+    # r,g,b = get_temp_color()
+    
+    sc.enter(60,1,check_alert,(sc,myloc))
+def run_fade(sc,):
+    r,g,b = current_temp_color
+    if alert==1:
+        fading.flash(1)
+    elif alert==2:
+        fading.reset(r,g,b)
+        fading.flash(2)
+    elif alert==3:
+        fading.fade(40,3)
+    elif alert==4:
+        fading.reset(r,g,b)
+        fading.fade(40,4)
+    elif alert==5:
+        fading.reset(r,g,b)
+        fading.fade(40,5)
+    elif alert==None:
+        fading.reset(r,g,b)
     else:
         pass
-    # Check every 4 seconds for an update to alert
-    sc.enter(4, 1, run_fade, (sc,))
-'''
+    sc.enter(4,1,run_fade,(sc,))
 
 #%% Run the schedules
+alert = None # default
+current_temp_color = (250,250,250) # default
 
 # Run the set color program first, then check for update every 5 minutes.
 s.enter(1, 1, set_color, (s,myloc))
 
-# Check for alert, then check every 10 seconds
-# s.enter(1, 1, check_alert, (s,))
+# Check for alert, then check every 60 seconds
+s.enter(1, 1, check_alert, (s,myloc))
 
 # Use value of alert to trigger fading, if neccesary
-
-# s.enter(1, 1, run_fade, (s,))
+s.enter(1, 1, run_fade, (s,))
 
 # Finally, run the schedules
 s.run()
