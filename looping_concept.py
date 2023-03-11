@@ -39,10 +39,10 @@ def check_alert(sc, myloc):
     start = time.time()
 
     try:
-        # alert = wwa.get_alerts(myloc, test=False)
-        fid = open('test.txt','r')
-        alert = int(fid.read())
-        fid.close()
+        alert = wwa.get_alerts(myloc, test=False)
+        # fid = open('test.txt','r')
+        # alert = int(fid.read())
+        # fid.close()
         print ('alert is '+str(alert))
     except Exception as e:
         alert = None
@@ -72,7 +72,7 @@ def run_fade(sc,):
 
 myloc = geocoder.ip('me')
 test_loc = True
-zipcode = '08016'
+zipcode = '93643'
 if myloc.latlng == None or test_loc == True:
     # Back up by using zip code
     # Tests
