@@ -52,7 +52,7 @@ pi = pigpio.pi()
 
 #%% Get curernt Location of Device and Locations of Stations
 
-zipcode = "93643" # CA Flash flood
+zipcode = "71667" # Arkansas Svr Tstm
 test_loc = True
 myloc = geocoder.ip('me')
 if myloc.latlng == None or test_loc==True:
