@@ -52,7 +52,7 @@ pi = pigpio.pi()
 
 #%% Get curernt Location of Device and Locations of Stations
 
-zipcode = "32830" # DISNEY
+zipcode = "08016" # home
 test_loc = True
 myloc = geocoder.ip('me')
 if myloc.latlng == None or test_loc==True:
