@@ -15,9 +15,9 @@ import pandas as pd
 import numpy as np
 import re
 import geocoder
-from matplotlib.colors import ListedColormap
-import matplotlib.pyplot as plt
-plt.rcParams["figure.figsize"] = (12,7)
+#from matplotlib.colors import ListedColormap
+#import matplotlib.pyplot as plt
+#plt.rcParams["figure.figsize"] = (12,7)
 # import cartopy
 import geopy.distance as gd
 import requests
@@ -65,7 +65,7 @@ if myloc.latlng == None or test_loc==True:
     myloc['latlng'] = [nomi.query_postal_code(zipcode).latitude,nomi.query_postal_code(zipcode).longitude]
 # print(myloc.latlng)
 
-stations = pd.read_excel(r'/home/admin/WeatherCube/NWS_Stations.xlsx',index_col='STID')
+stations = pd.read_excel(r'/home/pi/WeatherCube/NWS_Stations.xlsx',index_col='STID')
 stations['DistanceToMe'] = [gd.distance((myloc.latlng[0],myloc.latlng[1]),(lat,lon)).km for (lat, lon) in zip(stations.Latitude, stations.Longitude)]
 stations.sort_values(by='DistanceToMe',inplace=True)
 #%% Generate Color List
@@ -84,7 +84,7 @@ temp_rgbs = [(90,0,140),
              (255,15,0),
              (255,0,0)]
     
-cm = ListedColormap([tuple([t/255 for t in c]) for c in temp_rgbs], 'wcube', N=13)
+#cm = ListedColormap([tuple([t/255 for t in c]) for c in temp_rgbs], 'wcube', N=13)
 #%% Temperature Pattern DataFrame Set up
 pattern = pd.DataFrame(index = np.arange(-15,115,10))
 
@@ -190,3 +190,4 @@ s.enter(1, 1, run_fade, (s,))
 # Finally, run the schedules
 s.run()
 # Nothing can happen after this line
+
