@@ -39,6 +39,9 @@ def fade(speed, alert_num=5):
         # Any other alert, slow fade of current color
         r,g,b = (rr,gg,bb)
         er,eg,eb = (r/4,g/4,b/4)
+    elif alert_num == 6:
+        r,g,b = (0,0,0)
+        er,eg,eb = (255,45,0)
     else:
         pass
     
