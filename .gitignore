@@ -1,3 +1,4 @@
 
 __pycache__/fading.cpython-39.pyc
 *.pyc
+.DS_Store
