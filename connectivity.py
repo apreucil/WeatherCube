@@ -21,12 +21,15 @@ def is_connected():
 def get_wifi_networks():
     networks = []
     try:
-        output = subprocess.run(["iwlist", "scan"], capture_output=True).stdout.decode("utf-8")
+        output = subprocess.run(["sudo","iw", "dev", "wlan0","scan"], capture_output=True).stdout.decode("utf-8")
         lines = output.split("\n")
         for line in lines:
-            if "ESSID" in line:
-                network_name = line.split(":")[1].replace('"', "")
-                networks.append(network_name)
+            if "SSID" in line:
+                try:
+                    network_name = line.split(":")[1].replace('"', "")
+                    networks.append(network_name[1:])
+                except:
+                    pass
     except Exception as e:
         print(e)
     return networks
