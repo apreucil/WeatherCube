@@ -23,7 +23,11 @@ def fade(speed, alert_num=5):
     global rr
     global gg
     global bb
-    rr,gg,bb = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
+    
+    try:
+        rr,gg,bb = tuple([pi.get_PWM_dutycycle(i) for i in [17,22,24]])
+    except:
+        pass
 
     # uncomment for mac
     # r,g,b = (200,56,90)
