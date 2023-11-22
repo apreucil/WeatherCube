@@ -28,6 +28,7 @@ import wwa
 import sched, time
 import fading
 from connectivity import *
+import datetime
 
 def turn_off():
     pi.set_PWM_dutycycle(17,0)
@@ -102,7 +103,7 @@ temp_color_key = pd.DataFrame(index=pattern_df.index)
 temp_color_key['temp_color'] = list(zip(pattern_df.r,pattern_df.g,pattern_df.b))
 
 #%% Get current temperature
-t_re = r'Temperature:<\/span><\/td><td>\s*(-?\d*\.\d*)'
+#t_re = r'Temperature:<\/span><\/td><td>\s*(-?\d*\.\d*)'
 
 s = sched.scheduler(time.time, time.sleep)
 
@@ -113,9 +114,13 @@ def get_temp_color():
         try:
             location = stations.head(i).index[i-1]
             #Note - try this: https://www.weather.gov/wrh/timeseries?site=KVAY
-            r = requests.get(r'https://www.aviationweather.gov/metar/data?ids='+location+'&format=decoded&hours=0&taf=off&layout=on')
-            html = r.text
-            current_temp_F = round(float(re.findall(t_re,html)[0])*9/5+32,0)
+            # Note - had to change to IEM because weather service modernized.
+            #r = requests.get(r'https://www.aviationweather.gov/metar/data?ids='+location+'&format=decoded&hours=0&taf=off&layout=on')
+            today = datetime.date.today()
+            yesterday = datetime.date.today() - datetime.timedelta(1)
+            url = r'https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station='+location[-3:]+r'&data=tmpc&year1='+yesterday.strftime('%Y')+'&month1='+yesterday.strftime('%m')+r'&day1='+yesterday.strftime('%d')+r'&year2='+today.strftime('%Y')+r'&month2='+today.strftime('%m')+r'&day2='+today.strftime('%d')+r'&tz=America%2FChicago&format=onlycomma&latlon=no&elev=no&missing=M&trace=T&direct=no&report_type=3&report_type=4'
+            df = pd.read_csv(url)
+            current_temp_F = round(float(df.tail(1).tmpc.values[0])*9/5+32,0)
             data = True
         except:
             i+=1
