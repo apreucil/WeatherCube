@@ -116,7 +116,7 @@ def get_temp_color():
             #Note - try this: https://www.weather.gov/wrh/timeseries?site=KVAY
             # Note - had to change to IEM because weather service modernized.
             #r = requests.get(r'https://www.aviationweather.gov/metar/data?ids='+location+'&format=decoded&hours=0&taf=off&layout=on')
-            today = datetime.date.today()
+            today = datetime.date.today() + datetime.timedelta(1)
             yesterday = datetime.date.today() - datetime.timedelta(1)
             url = r'https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station='+location[-3:]+r'&data=tmpc&year1='+yesterday.strftime('%Y')+'&month1='+yesterday.strftime('%m')+r'&day1='+yesterday.strftime('%d')+r'&year2='+today.strftime('%Y')+r'&month2='+today.strftime('%m')+r'&day2='+today.strftime('%d')+r'&tz=America%2FChicago&format=onlycomma&latlon=no&elev=no&missing=M&trace=T&direct=no&report_type=3&report_type=4'
             df = pd.read_csv(url)
